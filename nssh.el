@@ -67,6 +67,24 @@
           nssh-known-hosts-files)
     (nssh-process-hosts)))
 
+(defun nssh-resolve (host)
+  "Resolve HOSTNAME. Returns a list of IPs."
+  (if url-gateway-nslookup-program
+      (let ((proc (start-process " *nslookup*" " *nslookup*"
+                                 url-gateway-nslookup-program host))
+            (res))
+        (set-process-query-on-exit-flag proc nil)
+        (with-current-buffer (process-buffer proc)
+          (while (memq (process-status proc) '(run open))
+            (accept-process-output proc))
+          (goto-char (point-min))
+            (while (re-search-forward "Name:.*\nAddress: *\\(.*\\)$" nil t)
+              (add-to-list 'res (buffer-substring (match-beginning 1)
+                                          (match-end 1))))
+          (kill-buffer (current-buffer)))
+        res)
+    host))
+
 (defun nssh-user-host (dest)
   "Extract user and host from DEST.
 
@@ -113,6 +131,21 @@
       (setq comint-prompt-read-only t)
       (cd (format "/%s:%s@%s:" (nssh-protocol user) user host))
       (shell (current-buffer)))))
+
+(defun nssh-all (dest)
+  "Log into all hosts DEST resolves to."
+  (interactive (list (completing-read "Host: "
+                                      (append nssh-history (nssh-known-hosts))
+                                      nil nil nil 'nssh-history)))
+  (let* ((user-host (nssh-user-host dest))
+         (user (car user-host))
+         (host (cadr user-host)))
+    (mapc
+     (lambda (ip)
+       (nssh ip (get-buffer-create (nssh-buffer user (format "%s(%s)" host ip) nil))))
+
+     (nssh-resolve host))))
+
 
 (provide 'nssh)
 ;;; nssh-n.el ends here
