@@ -69,6 +69,7 @@
 
 (defun nssh-resolve (host)
   "Resolve HOSTNAME. Returns a list of IPs."
+  (require 'url-gw)
   (if url-gateway-nslookup-program
       (let ((proc (start-process " *nslookup*" " *nslookup*"
                                  url-gateway-nslookup-program host))
