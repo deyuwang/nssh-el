@@ -3,6 +3,7 @@
 ;; Copyright (C) 2014  Ian Eure
 
 ;; Author: Ian Eure <ian.eure@gmail.com>
+;; Version: 0.9.8
 ;; Keywords: tools, unix, processes
 
 ;; This program is free software; you can redistribute it and/or modify
