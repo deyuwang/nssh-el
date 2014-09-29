@@ -1,9 +1,9 @@
-;;; nssh-n.el --- SSH mode for Emacs
+ ;;; nss.el --- New SSH mode for Emacs
 
 ;; Copyright (C) 2014  Ian Eure
 
 ;; Author: Ian Eure <ian.eure@gmail.com>
-;; Version: 0.9.8
+;; Version: 0.9.8b
 ;; Keywords: tools, unix, processes
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -19,6 +19,16 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+;;; Commentary:
+
+;; nssh is a new SSH mode for Emacs, based on TRAMP and shell-mode. It
+;; takes some inspiration and code from `ssh-mode`, by Noah Friedman.
+
+;; `M-x nssh RET` will open a connection. If a live connection is open,
+;; it will be brought to the foreground. If the buffer exists, but the
+;; process is dead, it will reconnect. With a prefix argument, opens a
+;; new connection.
+
 ;;; Code:
 
 (defvar nssh-history nil
@@ -31,7 +41,7 @@
   username of the `nssh' destination is different from
   USER-LOGIN-NAME.
 
-  When NIL, `nssl' will use the ssh protocol")
+  When NIL, `nssh' will use the ssh protocol")
 
 (defvar nssh-known-hosts-files
   '("/etc/ssh/ssh_known_hosts"
@@ -148,6 +158,5 @@
 
      (nssh-resolve host))))
 
-
 (provide 'nssh)
-;;; nssh-n.el ends here
+;;; nssh.el ends here
